@@ -14,7 +14,7 @@
 use warnings;
 use strict;
 
-my $version = "1.0.1";
+my $version = "1.0.2";
 
 # Clear the screen before doing anything
 my $clear_string = `clear`;
@@ -36,6 +36,7 @@ my $i = 0;
 my $path;
  
 # Setting an array of all filesnames for the domlogs on the system
+#my @log = </home/tmp/*>;
 my @log = </usr/local/apache/domlogs/*>;
  
 # Initializing the hashes that will track the data we display
@@ -136,11 +137,13 @@ sub largest_value_mem (\%) {
 
 my $hitter=(largest_value_mem %DOMseen);
 
+if (defined $hitter) {
+
 # Applies regex to the $hitter variable that contains the full path to the domlog for the domain with the
 # most POSTS requests and strips out just the domain portion, storing it as the variable $path
-($path) = $hitter =~ m/domlogs\/([^\/]+)/g;
-if ($path) {
-}
+	($path) = $hitter =~ m/domlogs\/([^\/]+)/g;
+		if ($path) {
+		}	
 
 undef $i;
 
@@ -149,7 +152,7 @@ print "\n${PINK}Files receiving the most POST requests on $path${NO}\n";
 
 
 my $name;
-open ($name, '<', $hitter) or die "Could not open file";
+open ($name, '<', $hitter) or die "Could not open file $hitter";
 
 while (my $row = <$name>) {
 	chomp $row;
@@ -166,6 +169,9 @@ for my $key (sort {$HITTERseen{$b} <=> $HITTERseen{$a} }  keys %HITTERseen)  {
                 if ($i == $top){last;}
 }
 
+} else {
+print "\n${PINK}Files receiving the most POST requests on${NO}\n";
+}
 
 #----------------------------------------------------------------------------------------------#
 #                              END DATA ORGANIZATION AND PRINTING                              #
